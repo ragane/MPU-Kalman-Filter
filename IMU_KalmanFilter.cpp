@@ -77,7 +77,7 @@ void KalmanFilter::prediction(float Angle, float Rate)
         KF_Angle += dT * newRate;
 
         // 2. Extrapolate uncertainty
-        P[0][0] += (P[0][1] + P[1][1]) * dT + Q_Angle * dT;
+        P[0][0] += ((dT * P[1][1] - P[0][1] - P[1][0]) + Q_Angle) * dT;
         P[0][1] -= P[1][1] * dT;
         P[1][0] -= P[1][1] * dT;
         P[1][1] += Q_Bias * dT;
