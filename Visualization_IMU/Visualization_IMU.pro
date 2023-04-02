@@ -21,6 +21,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += src
 
 SOURCES += \
+    DataConv.cpp \
     main.cpp \
     dialog.cpp \
     src/qcustomplot.cpp \

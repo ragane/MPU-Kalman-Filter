@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1005</width>
+    <width>1060</width>
     <height>601</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>341</width>
+     <width>411</width>
      <height>351</height>
     </rect>
    </property>
@@ -26,14 +26,14 @@
     <cursorShape>OpenHandCursor</cursorShape>
    </property>
    <property name="title">
-    <string>Microcontroler connection</string>
+    <string>Device connection</string>
    </property>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>30</x>
       <y>30</y>
-      <width>251</width>
+      <width>331</width>
       <height>71</height>
      </rect>
     </property>
@@ -64,12 +64,12 @@
      </item>
     </layout>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser">
+   <widget class="QTextBrowser" name="LogText">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>130</y>
-      <width>331</width>
+      <width>401</width>
       <height>211</height>
      </rect>
     </property>
@@ -78,20 +78,20 @@
   <widget class="QCustomPlot" name="AccGraph" native="true">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>450</x>
      <y>10</y>
      <width>591</width>
-     <height>221</height>
+     <height>241</height>
     </rect>
    </property>
   </widget>
   <widget class="QCustomPlot" name="GyroGraph" native="true">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>260</y>
+     <x>450</x>
+     <y>270</y>
      <width>591</width>
-     <height>221</height>
+     <height>231</height>
     </rect>
    </property>
   </widget>
@@ -110,7 +110,7 @@
    <property name="title">
     <string>Device configuration</string>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>17</x>
@@ -166,9 +166,9 @@
   <widget class="QGroupBox" name="ImuBox">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>450</x>
      <y>510</y>
-     <width>651</width>
+     <width>611</width>
      <height>111</height>
     </rect>
    </property>
@@ -178,7 +178,7 @@
    <property name="title">
     <string>IMU configuration</string>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>5</x>
@@ -198,7 +198,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_6"/>
+        <widget class="QComboBox" name="AccScaleBox"/>
        </item>
       </layout>
      </item>
@@ -212,7 +212,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox"/>
+        <widget class="QComboBox" name="GyroScaleBox"/>
        </item>
       </layout>
      </item>
