@@ -13,6 +13,7 @@ Program for reading data from the MPU6050 accelerometer and gyroscope.
 MPU6050 MPU;
 KalmanFilter X_Kalman;
 KalmanFilter Y_Kalman;
+KalmanFilter Z_Kalman;
 
 // variables of data from accelerometer
 float normalAccPitch = 0;
@@ -27,6 +28,7 @@ float normalGyroYaw = 0;
 // values from Kalman Filter
 float kalPitch = 0;
 float kalRoll = 0;
+float kalYaw = 0;
 
 unsigned int startTime = 0;
 float timeStep = 0.01;
@@ -63,6 +65,7 @@ void loop()
   // calculate values of pitch and roll estimated by Kalman Filter
   kalPitch = Y_Kalman.compute(normalAccPitch, normalGyro.YAxis);
   kalRoll = X_Kalman.compute(normalAccRoll, normalGyro.XAxis);
+  kalYaw = Z_Kalman.compute(normalAccYaw, normalGyroYaw);
   
   // calculate normalized values of pitch, roll and yaw from gyro data
   normalGyroPitch += normalGyro.YAxis * timeStep;
@@ -87,7 +90,9 @@ void loop()
   //Serial.print("\t Roll Kalman value: ");
   Serial.print(kalRoll);
   Serial.println("/");
-  
+
+  Serial.print(kalYaw);
+  Serial.println("/");
   /*
   Serial.print("Normalized obtained values from gyroscope:");
   Serial.print("\t Normalized Gyro Pitch:");
@@ -100,6 +105,3 @@ void loop()
   // Frequency of program 1 Hz
   delay(1000);
 }
-
-
-
