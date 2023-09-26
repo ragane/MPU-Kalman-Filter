@@ -89,9 +89,6 @@ void Dialog::setupGraph()
     ui->YawGraph->graph(0)->setPen(QPen(Qt::blue));
     ui->YawGraph->graph(0)->setName("Real data");
 
-    ui->YawGraph->addGraph();
-    ui->YawGraph->graph(1)->setPen(QPen(Qt::green));
-    ui->YawGraph->graph(1)->setName("KF data");
 
     ui->YawGraph->xAxis->setLabel("Time [s]");
     ui->YawGraph->yAxis->setLabel("Yaw");
@@ -260,9 +257,9 @@ void Dialog::readSerial()
     QStringList values = SerialString.split("/");
 
 
-    if (values.size() < 6)
+    if (values.size() < 5)
     {
-        QThread::sleep(0.001);
+        QThread::sleep(0.01);
 
     }
     else
@@ -273,7 +270,6 @@ void Dialog::readSerial()
         Roll_Val = values[1].toDouble();
         KFRoll_Val = values[4].toDouble();
         Yaw_Val = values[2].toDouble();
-        KFYaw_Val = values[5].toDouble();
     }
     drawGraph();
 
@@ -296,16 +292,18 @@ void Dialog::drawGraph()
       ui->GyroGraph->graph(1)->addData(key, KFPitch_Val);
 
       ui->YawGraph->graph(0)->addData(key, Yaw_Val);
-      ui->YawGraph->graph(1)->addData(key, KFYaw_Val);
 
       lastPointKey = key;
     }
     // make key axis range scroll with the data (at a constant range size of 8):
     ui->AccGraph->xAxis->setRange(key, 8, Qt::AlignRight);
+    ui->AccGraph->yAxis->rescale();
     ui->AccGraph->replot();
     ui->GyroGraph->xAxis->setRange(key, 8, Qt::AlignRight);
+    ui->GyroGraph->yAxis->rescale();
     ui->GyroGraph->replot();
     ui->YawGraph->xAxis->setRange(key, 8, Qt::AlignRight);
+    ui->YawGraph->yAxis->rescale();
     ui->YawGraph->replot();
 
 
