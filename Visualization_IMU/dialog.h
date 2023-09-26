@@ -5,6 +5,8 @@
 #include <src/qcustomplot.h>
 #include <QSerialPort>
 #include <QVector>
+#include <string>
+#include <QThread>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
@@ -23,7 +25,8 @@ private slots:
     void setupAccScaleBox();
     void setupGyroScaleBox();
     void setupConnectionBox();
-    void drawAccGraph();
+    void drawGraph();
+
     //*TODO set ability to change the work of MPU
     //void setAccScale(mpu6050_range_t);
     //void setGyroScale(int index);
@@ -41,7 +44,7 @@ private:
     QSerialPort * device;
     QCustomPlot * AccGraph;
     QCustomPlot * GyroGraph;
-
+    QCustomPlot * YawGraph;
     QComboBox * AccScaleBox;
     QComboBox * GyroScaleBox;
     QComboBox * BaudrateBox;
@@ -54,10 +57,11 @@ private:
     QStringList parityList = {"No parity", "Even Parity", "Odd Parity"};
     QStringList flowList = {"Flow control", "No flow control"};
     QStringList stopList = {"1 bit", "2 bits"};
-    const QStringList resultList;
 
-    QVector<int> labels;
-    QVector<QVector<double>> data;
-    double time, Acc_X, Acc_Y, Acc_Z;
+    double Roll_Val, Pitch_Val, Yaw_Val;
+    double KFRoll_Val, KFPitch_Val, KFYaw_Val;
+
+
+    //Yaw_Val, Kal_Roll, Kal_Pitch;
 };
 #endif // DIALOG_H

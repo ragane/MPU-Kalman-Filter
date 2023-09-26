@@ -21,7 +21,7 @@ Dialog::Dialog(QWidget *parent)
     Dialog::setupAccScaleBox();
     Dialog::setupGyroScaleBox();
     Dialog::setupConnectionBox();
-    Dialog::drawAccGraph();
+    Dialog::drawGraph();
 }
 
 
@@ -29,73 +29,110 @@ void Dialog::setupGraph()
 {
     ui->AccGraph->addGraph();
     ui->AccGraph->graph(0)->setPen(QPen(Qt::blue));
-    ui->AccGraph->graph(0)->setName("X-axis");
+    ui->AccGraph->graph(0)->setName("Real data");
 
     ui->AccGraph->addGraph();
     ui->AccGraph->graph(1)->setPen(QPen(Qt::green));
-    ui->AccGraph->graph(1)->setName("Y-axis");
+    ui->AccGraph->graph(1)->setName("KF data");
 
-    ui->AccGraph->addGraph();
-    ui->AccGraph->graph(2)->setPen(QPen(Qt::red));
-    ui->AccGraph->graph(2)->setName("Z-axis");
 
     ui->AccGraph->xAxis->setLabel("Time [s]");
-    ui->AccGraph->yAxis->setLabel("Acceleration [g]");
+    ui->AccGraph->yAxis->setLabel("Roll");
     ui->AccGraph->setWindowTitle("Acceleration graph");
 
     // set yAxis ranges of AccGraph
-    ui->AccGraph->yAxis->setRange(-10, 10);
-    ui->AccGraph->yAxis2->setRange(-10, 10);
+    ui->AccGraph->yAxis->setRange(-20, 20);
+    ui->AccGraph->yAxis2->setRange(-20, 20);
 
-    QCPTextElement * accTitle = new QCPTextElement(AccGraph);
-    accTitle->setText("Title");
-    accTitle->setFont(QFont("sans", 8, QFont::Bold));
-    //accTitle->setTextColor(Qt::black);
+    // set title of roll graph
     ui->AccGraph->plotLayout()->insertRow(0);
+    QCPTextElement * accTitle = new QCPTextElement(ui->AccGraph, "Roll graph", QFont("arial", 12, QFont::Bold));
     ui->AccGraph->plotLayout()->addElement(0, 0, accTitle);
+
+    QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
+    timeTicker->setTimeFormat("%h:%m:%s");
+    ui->AccGraph->xAxis->setTicker(timeTicker);
+    ui->GyroGraph->xAxis->setTicker(timeTicker);
+    connect(ui->AccGraph->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->AccGraph->xAxis, SLOT(setRange(QCPRange)));
+    connect(ui->AccGraph->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->AccGraph->yAxis, SLOT(setRange(QCPRange)));
+
 
     ui->GyroGraph->addGraph();
     ui->GyroGraph->graph(0)->setPen(QPen(Qt::blue));
-    ui->GyroGraph->graph(0)->setName("Yaw");
+    ui->GyroGraph->graph(0)->setName("Real data");
 
     ui->GyroGraph->addGraph();
     ui->GyroGraph->graph(1)->setPen(QPen(Qt::green));
-    ui->GyroGraph->graph(1)->setName("Pitch");
+    ui->GyroGraph->graph(1)->setName("KF data");
 
-    ui->GyroGraph->addGraph();
-    ui->GyroGraph->graph(2)->setPen(QPen(Qt::red));
-    ui->GyroGraph->graph(2)->setName("Roll");
 
     ui->GyroGraph->xAxis->setLabel("Time [s]");
-    ui->GyroGraph->yAxis->setLabel("Gyration [°/s]");
-    ui->GyroGraph->setWindowTitle("Gyroscope graph");
+    ui->GyroGraph->yAxis->setLabel("Pitch");
+    ui->GyroGraph->setWindowTitle("Pitch graph");
 
-    // set yAxis ranges of GyroGraph
-    ui->GyroGraph->yAxis->setRange(-1000, 1000);
-    ui->GyroGraph->yAxis2->setRange(-1000, 1000);
+    //set yAxis ranges of GyroGraph
+    ui->GyroGraph->yAxis->setRange(-20, 20);
+    ui->GyroGraph->yAxis2->setRange(-20, 20);
+    connect(ui->GyroGraph->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->GyroGraph->xAxis, SLOT(setRange(QCPRange)));
+    connect(ui->GyroGraph->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->GyroGraph->yAxis, SLOT(setRange(QCPRange)));
 
     QFont legendGyro = font();
     legendGyro.setPointSize(9);
 
+    // create title of gyrograph
+    ui->GyroGraph->plotLayout()->insertRow(0);
+    QCPTextElement * gyroTitle = new QCPTextElement(ui->GyroGraph, "Pitch Graph", QFont("arial", 12, QFont::Bold));
+    ui->GyroGraph->plotLayout()->addElement(0, 0, gyroTitle);
+
+
+    ui->YawGraph->addGraph();
+    ui->YawGraph->graph(0)->setPen(QPen(Qt::blue));
+    ui->YawGraph->graph(0)->setName("Real data");
+
+    ui->YawGraph->addGraph();
+    ui->YawGraph->graph(1)->setPen(QPen(Qt::green));
+    ui->YawGraph->graph(1)->setName("KF data");
+
+    ui->YawGraph->xAxis->setLabel("Time [s]");
+    ui->YawGraph->yAxis->setLabel("Yaw");
+    ui->YawGraph->yAxis->setRange(-20, 20);
+    ui->YawGraph->yAxis2->setRange(-20, 20);
+    connect(ui->YawGraph->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->YawGraph->xAxis, SLOT(setRange(QCPRange)));
+    connect(ui->YawGraph->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->YawGraph->yAxis, SLOT(setRange(QCPRange)));
+
+    QFont legendYaw = font();
+    legendYaw.setPointSize(9);
+
+    // create title of yaw graph
+    ui->YawGraph->plotLayout()->insertRow(0);
+    QCPTextElement * yawTitle = new QCPTextElement(ui->YawGraph, "Yaw Graph", QFont("arial", 12, QFont::Bold));
+    ui->YawGraph->plotLayout()->addElement(0, 0, yawTitle);
+
+
     // make AccGraph interacted
     ui->AccGraph->legend->setFont(legendGyro);
-    ui->AccGraph->legend->setBrush(QBrush(QColor(255, 200, 255, 255)));
+    ui->AccGraph->legend->setBrush(QBrush(QColor(255, 255, 255, 230)));
     ui->AccGraph->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
-
+    ui->AccGraph->legend->setVisible(true);
     // make GyroGraph interacted
     ui->GyroGraph->legend->setFont(legendGyro);
     ui->GyroGraph->legend->setBrush(QBrush(QColor(255, 255, 255, 230)));
     ui->GyroGraph->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
-
-    // create title of gyrograph
-    //QCPTextElement * gyroTitle = new QCPTextElement(GyroGraph, "titleTxt", QFont("sans", 12, QFont::Bold));
-    //gyroTitle->setText("Title");
-    //gyroTitle->setFont(QFont("sans", 8, QFont::Bold));
-    //gyroTitle->setTextColor(QColor(255, 255, 0, 0));
-    //ui->GyroGraph->plotLayout()->insertRow(0);
-    //ui->GyroGraph->plotLayout()->addElement(0, 0, gyroTitle);
+    ui->GyroGraph->legend->setVisible(true);
+    // make YawGraph interacted
+    ui->YawGraph->legend->setFont(legendYaw);
+    ui->YawGraph->legend->setBrush(QBrush(QColor(255, 255, 255, 233)));
+    ui->YawGraph->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->YawGraph->legend->setVisible(true);
 
 }
+
+
+
+
+
+
+
 void Dialog::setupAccScaleBox()
 {
     ui->AccScaleBox->addItem("±2 g");
@@ -126,8 +163,6 @@ void Dialog::setupConnectionBox()
     ui->StopBox->addItems(stopList);
     ui->StopBox->setCurrentText("1 bit");
 }
-
-
 
 
 
@@ -218,31 +253,61 @@ void Dialog::on_DisconnectButton_clicked()
 
 void Dialog::readSerial()
 {
-    QByteArray byteArray = device->readAll();
-    qDebug() << " ****" << byteArray << "****";
-    QStringList resultList = QString(byteArray).split("/");
-    // TODO zapisywac do pliku CSV!!! z ktorego potem bedzie czytane do robienia wykresow!!!
+\
 
-    //if (x_axis.count() > x_axis.size)
-    // Accelerometer results
-    qDebug() << resultList[0]; //x_axis;
-    qDebug() << resultList[4]; //KalRoll;
-    if (!resultList.isEmpty())
+    QString SerialString = device->readAll();
+    this->addLogs("Serial data: " + SerialString);
+    QStringList values = SerialString.split("/");
+
+
+    if (values.size() < 6)
     {
-        // acc pitch
-        //container[0].append(resultList[0].toDouble());
-        // acc roll
-        //container[1].append(resultList[1].toDouble());
-        // acc yaw
-        //container[2].append(resultList[1].toDouble());
+        QThread::sleep(0.001);
+
     }
+    else
+    {
+        qDebug() << "Serial data: " << values;
+        Pitch_Val = values[0].toDouble();
+        KFPitch_Val = values[3].toDouble();
+        Roll_Val = values[1].toDouble();
+        KFRoll_Val = values[4].toDouble();
+        Yaw_Val = values[2].toDouble();
+        KFYaw_Val = values[5].toDouble();
+    }
+    drawGraph();
 
 }
 
-void Dialog::drawAccGraph()
+void Dialog::drawGraph()
 {
-    //Acc_X = container[0];
-    time = QDateTime::currentDateTime().toMSecsSinceEpoch() / 1000.0;
-    //ui->AccGraph->graph(0)->addData(time, );
-    qDebug() << Acc_X << "!!!!!!!!!!!!1";
+
+    static QTime time(QTime::currentTime());
+    // calculate two new data points:
+    double key = time.elapsed()/1000.0; // time elapsed since start of demo, in seconds
+    static double lastPointKey = 0;
+    if (key-lastPointKey > 0.002) // at most add point every 2 ms
+    {
+      // add data to lines:
+      ui->AccGraph->graph(0)->addData(key, Roll_Val);
+      ui->AccGraph->graph(1)->addData(key, KFRoll_Val);
+
+      ui->GyroGraph->graph(0)->addData(key, Pitch_Val);
+      ui->GyroGraph->graph(1)->addData(key, KFPitch_Val);
+
+      ui->YawGraph->graph(0)->addData(key, Yaw_Val);
+      ui->YawGraph->graph(1)->addData(key, KFYaw_Val);
+
+      lastPointKey = key;
+    }
+    // make key axis range scroll with the data (at a constant range size of 8):
+    ui->AccGraph->xAxis->setRange(key, 8, Qt::AlignRight);
+    ui->AccGraph->replot();
+    ui->GyroGraph->xAxis->setRange(key, 8, Qt::AlignRight);
+    ui->GyroGraph->replot();
+    ui->YawGraph->xAxis->setRange(key, 8, Qt::AlignRight);
+    ui->YawGraph->replot();
+
+
 }
+
