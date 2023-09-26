@@ -103,5 +103,5 @@ void loop()
   Serial.println(normalGyroYaw);
   */
   // Frequency of program 1 Hz
-  delay(1000);
+  delay(80);
 }
