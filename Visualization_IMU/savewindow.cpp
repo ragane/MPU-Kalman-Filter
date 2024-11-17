@@ -55,7 +55,7 @@ void SaveWindow::on_pushButton_clicked()
     ui->SaveTree->setRootIndex(currentRoot.parent());
 }
 
-void SaveWindow::on_ExtendBox_currentIndexChanged(const QString &extension)
+void SaveWindow::on_ExtendBox_currentTextChanged(const QString &extension)
 {
     extended = (extension == ".png") ? ".png" : (extension ==".jpg") ? ".jpg" : ".bmp";
 }

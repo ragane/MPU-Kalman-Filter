@@ -1,9 +1,11 @@
 QT += core gui
 QT += printsupport
 QT += serialport
-
+QT += quickwidgets
+QT += qml
+QT += quick
+QT += core
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 
 CONFIG += c++11
 
@@ -24,17 +26,29 @@ SOURCES += \
     main.cpp \
     dialog.cpp \
     src/qcustomplot.cpp \
-    transfercontrol.cpp
+    savewindow.cpp \
+    serialdevice.cpp
 
 HEADERS += \
     dialog.h \
     src/qcustomplot.h \
-    transfercontrol.h
+    savewindow.h \
+    serialdevice.h
 
 FORMS += \
-    dialog.ui
+    dialog.ui \
+    savewindow.ui
+
+DISTFILES +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    qml.qrc
+
+
+
+

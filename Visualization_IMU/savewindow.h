@@ -22,7 +22,6 @@ public:
     ~SaveWindow();
 
     void CreateSaveTree();
-
     QFileSystemModel model;
 
     QString msg;
@@ -43,7 +42,7 @@ private slots:
     void on_SaveTree_clicked(const QModelIndex &index);
     void on_SaveTree_doubleClicked(const QModelIndex &index);
     void on_pushButton_clicked();
-    void on_ExtendBox_currentIndexChanged(const QString &arg1);
+    void on_ExtendBox_currentTextChanged(const QString &arg1);
     void on_FilenameLine_textEdited(const QString &arg1);
 
 private:
